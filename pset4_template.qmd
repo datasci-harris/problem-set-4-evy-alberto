@@ -30,9 +30,9 @@ Please refer to the minilesson on code style
     - Partner 1 (name and cnet ID):
     - Partner 2 (name and cnet ID):
 3. Partner 1 will accept the `ps4` and then share the link it creates with their partner. You can only share it with one partner so you will not be able to change it after your partner has accepted. 
-4. "This submission is our work alone and complies with the 30538 integrity policy." Add your initials to indicate your agreement: \*\*\_\_\*\* \*\*\_\_\*\*
+4. "This submission is our work alone and complies with the 30538 integrity policy." Add your initials to indicate your agreement: \*\*EL\*\* \*\*AS\*\*
 5. "I have uploaded the names of anyone else other than my partner and I worked with on the problem set **[here](https://docs.google.com/forms/d/185usrCREQaUbvAXpWhChkjghdGgmAZXA3lPWpXLLsts/edit)**"  (1 point)
-6. Late coins used this pset: \*\*\_\_\*\* Late coins left after submission: \*\*\_\_\*\*
+6. Late coins used this pset: \*\*1\*\* Late coins left after submission: \*\*2\*\*
 7. Knit your `ps4.qmd` to an PDF file to make `ps4.pdf`, 
     * The PDF should not be more than 25 pages. Use `head()` and re-size figures when appropriate. 
 8. (Partner 1): push  `ps4.qmd` and `ps4.pdf` to your github repo.
@@ -44,10 +44,98 @@ Please refer to the minilesson on code style
 ## Download and explore the Provider of Services (POS) file (10 pts)
 
 1. 
+List of variables we need: PRVDR_CTGRY_SBTYP_CD, PRVDR_CTGRY_CD, PRVDR_NUM, PGM_TRMNTN_CD, FAC_NAME, CITY_NAME, ST_ADR, ZIP_CD, SSA_CNTY_CD, STATE_CD
+
 2. 
     a.
-    b.
+    ```{python}
+    import pandas as pd
+    import altair as alt
+    ```
+
+    ```{python}
+    # Set path and read data
+    path = r"/Users/evylanai/MPP Autumn '24/Python II/pos2016.csv"
+    df2016 = pd.read_csv(path)
+    ```
+
+    ```{python}
+    # Subset short term hospital
+    shortterm_2016 = df2016[(df2016["PRVDR_CTGRY_SBTYP_CD"] == 1.0) & (df2016["PRVDR_CTGRY_CD"] == 1)]
+
+    # How many hopsitals in this data
+    print(len(shortterm_2016)) # Returns 7245
+
+    ```
+
+    b. In the research brief from the Kaiser Family Foundation, they cite that there are nearly 5,000 short-term, acute0-care hospitals in the U.S., and this estimation is different that what I found, which returned 7,245 short-term hospitals. The article wsa published in July of 2016, and I use data from Q4 of 2016, so the data from the KFF brief could be out of date. Additionally, they may be imposing additional parameters that are not listed in the brief, which could bring their total number of facilities down.
+
 3. 
+```{python}
+# Create a year column for 2016 observations
+shortterm_2016["YEAR"] = 2016
+```
+
+```{python}
+# Repeat above steps for 2017
+path = r"/Users/evylanai/MPP Autumn '24/Python II/pos2017.csv"
+df2017 = pd.read_csv(path)
+
+# Subset short term hospital
+shortterm_2017 = df2017[(df2017["PRVDR_CTGRY_SBTYP_CD"] == 1.0) & (df2017["PRVDR_CTGRY_CD"] == 1)]
+
+# Create a year column for 2017 observations
+shortterm_2017["YEAR"] = 2017
+```
+
+```{python}
+# Repeat above steps for 2018
+path = r"/Users/evylanai/MPP Autumn '24/Python II/pos2018.csv"
+# Added this encoding that ChatGPT provided when I encountered an error code
+df2018 = pd.read_csv(path, encoding="ISO-8859-1")
+
+# Subset short term hospital
+shortterm_2018 = df2018[(df2018["PRVDR_CTGRY_SBTYP_CD"] == 1.0) & (df2018["PRVDR_CTGRY_CD"] == 1)]
+
+# Create a year column for 2018 observations
+shortterm_2018["YEAR"] = 2018
+```
+
+```{python}
+path = r"/Users/evylanai/MPP Autumn '24/Python II/pos2018.csv"
+# Added this encoding that ChatGPT provided when I encountered an error code
+df2019 = pd.read_csv(path, encoding="ISO-8859-1")
+
+# Subset short term hospital
+shortterm_2019 = df2019[(df2019["PRVDR_CTGRY_SBTYP_CD"] == 1.0) & (df2019["PRVDR_CTGRY_CD"] == 1)]
+
+# Create a year column for 2019 observations
+shortterm_2019["YEAR"] = 2019
+```
+
+```{python}
+# Create list of date frames to append
+dfs_to_append = [shortterm_2016, shortterm_2017, shortterm_2018, shortterm_2019]
+# Append them
+appended_df = pd.concat(dfs_to_append, axis=0, ignore_index=True)
+```
+
+```{python}
+# Aggregate the data by year
+yearly_counts = appended_df.groupby("YEAR").size().reset_index(name = "count")
+
+# Plot the aggregated data
+alt.Chart(yearly_counts).mark_bar().encode(
+    x=alt.X("YEAR:O", title="Year"),
+    y=alt.Y("count:Q", title="Number of Observations", scale=alt.Scale(type="log"))
+).properties(
+    title="Number of Q4 Observations per Year",
+    width=600,
+    height=400
+)
+
+```
+
 4. 
     a.
     b.
