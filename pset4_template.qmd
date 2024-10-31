@@ -143,6 +143,61 @@ alt.Chart(yearly_counts).mark_bar().encode(
 ## Identify hospital closures in POS file (15 pts) (*)
 
 1. 
+
+```{python}
+df_2016 = df[df['year'] == 2016] 
+df_2019 = df[df['year'] == 2019]
+
+df_2016 = hospitals_2016[hospitals_2016['PGM_TRMNTN_CD'] == '00=ACTIVE PROVIDER']
+
+# We create a function that helps us dind hospitals that were not active or disappeared by 2019
+def check_closure(provider_num):
+    # Check if the hospital is present in 2019 data
+    hospital_2019 = hospitals_2019[hospitals_2019['PRVDR_NUM'] == provider_num]
+    if hospital_2019.empty or hospital_2019['PGM_TRMNTN_CD'].iloc[0] != 'Active Provider':
+        return True
+    return False
+
+# Apply the closure check and create a suspected closures DataFrame
+suspected_closures = active_2016[active_2016['PRVDR_NUM'].apply(check_closure)]
+suspected_closures['YEAR_CLOSED'] = 2019
+print(f"Number of suspected hospital closures by 2019: {len(suspected_closures)}")
+
+# Step 2: Sort suspected closures by facility name and report first 10 rows
+suspected_closures_sorted = suspected_closures[['FAC_NAME', 'ZIP_CD', 'YEAR_CLOSED']].sort_values(by='FAC_NAME')
+print(suspected_closures_sorted.head(10))
+
+# Step 3: Filter out potential mergers
+# Check if the number of active hospitals in a ZIP code decreased after suspected closure year
+
+def is_potential_merger(row):
+    zip_code = row['ZIP_CD']
+    year_closed = row['YEAR_CLOSED']
+    
+    # Filter data for the ZIP code for the current and next year
+    current_year_hospitals = hospitals_df[(hospitals_df['ZIP_CD'] == zip_code) & (hospitals_df['YEAR'] == year_closed)]
+    next_year_hospitals = hospitals_df[(hospitals_df['ZIP_CD'] == zip_code) & (hospitals_df['YEAR'] == year_closed + 1)]
+    
+    # Check if the number of active hospitals has decreased
+    active_current_year = current_year_hospitals[current_year_hospitals['PGM_TRMNTN_CD'] == 'Active Provider']
+    active_next_year = next_year_hospitals[next_year_hospitals['PGM_TRMNTN_CD'] == 'Active Provider']
+    
+    return len(active_next_year) >= len(active_current_year)
+
+# Apply the filter to remove potential mergers from the list of closures
+suspected_closures['POTENTIAL_MERGER'] = suspected_closures.apply(is_potential_merger, axis=1)
+confirmed_closures = suspected_closures[~suspected_closures['POTENTIAL_MERGER']]
+potential_mergers = suspected_closures[suspected_closures['POTENTIAL_MERGER']]
+
+print(f"Number of suspected mergers: {len(potential_mergers)}")
+print(f"Number of confirmed closures after removing potential mergers: {len(confirmed_closures)}")
+
+# Step 3.ii: Sort the corrected closures list by name and report the first 10 rows
+confirmed_closures_sorted = confirmed_closures[['FAC_NAME', 'ZIP_CD', 'YEAR_CLOSED']].sort_values(by='FAC_NAME')
+print(confirmed_closures_sorted.head(10))
+
+```
+
 2. 
 3. 
     a.
