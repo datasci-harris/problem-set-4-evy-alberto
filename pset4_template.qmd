@@ -178,7 +178,7 @@ print(suspected_closures.head(10))
     a.
 
 ```{python}
-# Check if the number of active hospitals in a ZIP code decreased after suspected closure year
+# Now, let's check if the number of active hospitals in a ZIP code decreased after suspected closure year
 
 def is_potential_merger(row):
     zip_code = row['ZIP_CD']
