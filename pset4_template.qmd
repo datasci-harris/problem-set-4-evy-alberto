@@ -145,29 +145,39 @@ alt.Chart(yearly_counts).mark_bar().encode(
 1. 
 
 ```{python}
-df_2016 = df[df['year'] == 2016] 
-df_2019 = df[df['year'] == 2019]
+# First, we identify all the Hospitals that were active in 2016
+df_2016_active = df2016[df2016['PGM_TRMNTN_CD'] == '00=ACTIVE PROVIDER']
 
-df_2016 = hospitals_2016[hospitals_2016['PGM_TRMNTN_CD'] == '00=ACTIVE PROVIDER']
 
-# We create a function that helps us dind hospitals that were not active or disappeared by 2019
+# Then, we create a function that helps us find hospitals that were not active 
+# or disappeared by 2019
 def check_closure(provider_num):
-    # Check if the hospital is present in 2019 data
-    hospital_2019 = hospitals_2019[hospitals_2019['PRVDR_NUM'] == provider_num]
-    if hospital_2019.empty or hospital_2019['PGM_TRMNTN_CD'].iloc[0] != 'Active Provider':
+    df2019 = df2019[df2019['PRVDR_NUM'] == provider_num]
+    if df2019.empty or df2019['PGM_TRMNTN_CD'].iloc[0] != '00=ACTIVE PROVIDER':
         return True
     return False
 
-# Apply the closure check and create a suspected closures DataFrame
-suspected_closures = active_2016[active_2016['PRVDR_NUM'].apply(check_closure)]
+# Finally, we apply the closure check and create a suspected closures DataFrame
+suspected_closures = df2016[df2016['PRVDR_NUM'].apply(check_closure)]
 suspected_closures['YEAR_CLOSED'] = 2019
 print(f"Number of suspected hospital closures by 2019: {len(suspected_closures)}")
 
-# Step 2: Sort suspected closures by facility name and report first 10 rows
-suspected_closures_sorted = suspected_closures[['FAC_NAME', 'ZIP_CD', 'YEAR_CLOSED']].sort_values(by='FAC_NAME')
-print(suspected_closures_sorted.head(10))
 
-# Step 3: Filter out potential mergers
+```
+
+2. 
+
+```{python}
+# For this step, we sorted suspected closures by facility name and report first 10 rows
+suspected_closures = suspected_closures[['FAC_NAME', 'ZIP_CD', 'YEAR_CLOSED']].sort_values(by='FAC_NAME')
+print(suspected_closures.head(10))
+
+```
+
+3. 
+    a.
+
+```{python}
 # Check if the number of active hospitals in a ZIP code decreased after suspected closure year
 
 def is_potential_merger(row):
@@ -195,12 +205,8 @@ print(f"Number of confirmed closures after removing potential mergers: {len(conf
 # Step 3.ii: Sort the corrected closures list by name and report the first 10 rows
 confirmed_closures_sorted = confirmed_closures[['FAC_NAME', 'ZIP_CD', 'YEAR_CLOSED']].sort_values(by='FAC_NAME')
 print(confirmed_closures_sorted.head(10))
-
 ```
 
-2. 
-3. 
-    a.
     b.
     c.
 
