@@ -126,19 +126,35 @@ yearly_counts = appended_df.groupby("YEAR").size().reset_index(name = "count")
 
 # Plot the aggregated data
 alt.Chart(yearly_counts).mark_bar().encode(
-    x=alt.X("YEAR:O", title="Year"),
-    y=alt.Y("count:Q", title="Number of Observations", scale=alt.Scale(type="log"))
+    x=alt.X("YEAR:O", title="Year", axis=alt.Axis(labelAngle=0)),
+    y=alt.Y("count:Q", title="Number of Observations", scale=alt.Scale(domain=[7225, 7300], clamp=True))
 ).properties(
     title="Number of Q4 Observations per Year",
     width=600,
-    height=400
+    height=200
 )
 
 ```
 
 4. 
-    a.
-    b.
+    a. 
+    ```{python}
+    # Group unique observations by year
+    # Modify this line to count unique observations per year
+    unique_byyear = appended_df.groupby("YEAR")["PRVDR_NUM"].nunique().reset_index(name = "count")
+
+    alt.Chart(unique_byyear).mark_bar().encode(
+        x=alt.X("YEAR:O", title="Year", axis=alt.Axis(labelAngle=0)),
+        y=alt.Y("count:Q", title="Number of Unique Observations", scale=alt.Scale(domain=[7225, 7300], clamp=True))
+    ).properties(
+        title="Number of Unique Observations per Year (in Q4)",
+        width=600,
+        height=200
+    )
+
+    ```
+
+    b. The plots for total observations by year (in quarter four) and unique observations by year (grouped by hospital identifier number) are identical. This means that each hospital only has one observation associated with it in the dataset, which could imply that that hospital is only assessed/reviewed once per quarter (or potentially, once per year).
 
 ## Identify hospital closures in POS file (15 pts) (*)
 
