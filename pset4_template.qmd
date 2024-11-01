@@ -176,7 +176,7 @@ def check_closure(provider_num):
 # Finally, we apply the closure check and create a suspected closures DataFrame
 suspected_closures = df2016[df2016['PRVDR_NUM'].apply(check_closure)]
 suspected_closures['YEAR_CLOSED'] = 2019
-print(f" Otro 2019: {len(suspected_closures)}")
+print(f"Number of suspected hospital closures by 2019: {len(suspected_closures)}")
 
 
 ```
