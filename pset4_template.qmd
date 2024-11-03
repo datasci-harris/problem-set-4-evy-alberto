@@ -1,5 +1,5 @@
 ---
-title: "Your Title"
+title: "PS4: Evy Lanai & Alberto Saldarriaga"
 format: 
   pdf:
     keep-tex: true
@@ -27,8 +27,8 @@ Please refer to the minilesson on code style
 ## Submission Steps (10 pts)
 1. This problem set is a paired problem set.
 2. Play paper, scissors, rock to determine who goes first. Call that person *Partner 1*.
-    - Partner 1 (name and cnet ID):
-    - Partner 2 (name and cnet ID):
+    - Partner 1 (Evy Lanai / ellanai):
+    - Partner 2 (Alberto Saldarriaga / asaldarriagav):
 3. Partner 1 will accept the `ps4` and then share the link it creates with their partner. You can only share it with one partner so you will not be able to change it after your partner has accepted. 
 4. "This submission is our work alone and complies with the 30538 integrity policy." Add your initials to indicate your agreement: \*\*EL\*\* \*\*AS\*\*
 5. "I have uploaded the names of anyone else other than my partner and I worked with on the problem set **[here](https://docs.google.com/forms/d/185usrCREQaUbvAXpWhChkjghdGgmAZXA3lPWpXLLsts/edit)**"  (1 point)
@@ -47,7 +47,7 @@ Please refer to the minilesson on code style
 List of variables we need: PRVDR_CTGRY_SBTYP_CD, PRVDR_CTGRY_CD, PRVDR_NUM, PGM_TRMNTN_CD, FAC_NAME, CITY_NAME, ST_ADR, ZIP_CD, SSA_CNTY_CD, STATE_CD
 
 2. 
-    a.
+    a. This number does make sense because it is pulling from a national list of hospitals, so 7,245 seems like a reasonable amount of hospitals to be in the U.S.
     ```{python}
     import pandas as pd
     import altair as alt
@@ -55,20 +55,19 @@ List of variables we need: PRVDR_CTGRY_SBTYP_CD, PRVDR_CTGRY_CD, PRVDR_NUM, PGM_
 
     ```{python}
     # Set path and read data
-    path = r"/Users/evylanai/MPP Autumn '24/Python II/pos2016.csv"
+    path = r'C:\Users\msald\OneDrive\Escritorio\UChicago\3. Classes\2425\1. Autum\2. PythonII\ps4\pos2016.csv'
+    #path = r"/Users/evylanai/MPP Autumn '24/Python II/pos2016.csv"
     df2016 = pd.read_csv(path)
     ```
 
     ```{python}
     # Subset short term hospital
     shortterm_2016 = df2016[(df2016["PRVDR_CTGRY_SBTYP_CD"] == 1.0) & (df2016["PRVDR_CTGRY_CD"] == 1)]
-
     # How many hopsitals in this data
     print(len(shortterm_2016)) # Returns 7245
-
     ```
 
-    b. In the research brief from the Kaiser Family Foundation, they cite that there are nearly 5,000 short-term, acute0-care hospitals in the U.S., and this estimation is different that what I found, which returned 7,245 short-term hospitals. The article wsa published in July of 2016, and I use data from Q4 of 2016, so the data from the KFF brief could be out of date. Additionally, they may be imposing additional parameters that are not listed in the brief, which could bring their total number of facilities down.
+    b. In the research brief from the Kaiser Family Foundation, they cite that there are nearly 5,000 short-term, acute-care hospitals in the U.S. This is different than the number that I found, likely because this data includes hospitals that are no longer active.
 
 3. 
 ```{python}
@@ -78,37 +77,31 @@ shortterm_2016["YEAR"] = 2016
 
 ```{python}
 # Repeat above steps for 2017
-path = r"/Users/evylanai/MPP Autumn '24/Python II/pos2017.csv"
+path = r'C:\Users\msald\OneDrive\Escritorio\UChicago\3. Classes\2425\1. Autum\2. PythonII\ps4\pos2017.csv'
 df2017 = pd.read_csv(path)
-
 # Subset short term hospital
 shortterm_2017 = df2017[(df2017["PRVDR_CTGRY_SBTYP_CD"] == 1.0) & (df2017["PRVDR_CTGRY_CD"] == 1)]
-
 # Create a year column for 2017 observations
 shortterm_2017["YEAR"] = 2017
 ```
 
 ```{python}
 # Repeat above steps for 2018
-path = r"/Users/evylanai/MPP Autumn '24/Python II/pos2018.csv"
+path = r'C:\Users\msald\OneDrive\Escritorio\UChicago\3. Classes\2425\1. Autum\2. PythonII\ps4\pos2018.csv'
 # Added this encoding that ChatGPT provided when I encountered an error code
 df2018 = pd.read_csv(path, encoding="ISO-8859-1")
-
 # Subset short term hospital
 shortterm_2018 = df2018[(df2018["PRVDR_CTGRY_SBTYP_CD"] == 1.0) & (df2018["PRVDR_CTGRY_CD"] == 1)]
-
 # Create a year column for 2018 observations
 shortterm_2018["YEAR"] = 2018
 ```
 
 ```{python}
-path = r"/Users/evylanai/MPP Autumn '24/Python II/pos2019.csv"
+path = r'C:\Users\msald\OneDrive\Escritorio\UChicago\3. Classes\2425\1. Autum\2. PythonII\ps4\pos2019.csv'
 # Added this encoding that ChatGPT provided when I encountered an error code
 df2019 = pd.read_csv(path, encoding="ISO-8859-1")
-
 # Subset short term hospital
 shortterm_2019 = df2019[(df2019["PRVDR_CTGRY_SBTYP_CD"] == 1.0) & (df2019["PRVDR_CTGRY_CD"] == 1)]
-
 # Create a year column for 2019 observations
 shortterm_2019["YEAR"] = 2019
 ```
@@ -123,17 +116,15 @@ appended_df = pd.concat(dfs_to_append, axis=0, ignore_index=True)
 ```{python}
 # Aggregate the data by year
 yearly_counts = appended_df.groupby("YEAR").size().reset_index(name = "count")
-
 # Plot the aggregated data
 alt.Chart(yearly_counts).mark_bar().encode(
     x=alt.X("YEAR:O", title="Year", axis=alt.Axis(labelAngle=0)),
-    y=alt.Y("count:Q", title="Number of Observations", scale=alt.Scale(domain=[7225, 7300], clamp=True))
+    y=alt.Y("count:Q", title="Number of Observations", scale=alt.Scale(domain=[7225, 7320], clamp=True))
 ).properties(
     title="Number of Q4 Observations per Year",
     width=600,
     height=200
 )
-
 ```
 
 4. 
@@ -145,7 +136,7 @@ alt.Chart(yearly_counts).mark_bar().encode(
 
     alt.Chart(unique_byyear).mark_bar().encode(
         x=alt.X("YEAR:O", title="Year", axis=alt.Axis(labelAngle=0)),
-        y=alt.Y("count:Q", title="Number of Unique Observations", scale=alt.Scale(domain=[7225, 7300], clamp=True))
+        y=alt.Y("count:Q", title="Number of Unique Observations", scale=alt.Scale(domain=[7225, 7320], clamp=True))
     ).properties(
         title="Number of Unique Observations per Year (in Q4)",
         width=600,
@@ -158,34 +149,25 @@ alt.Chart(yearly_counts).mark_bar().encode(
 
 ## Identify hospital closures in POS file (15 pts) (*)
 
-1. 
+1. 174 hospitals fit the definition of a suspected closure
 
 ```{python}
 #Load df
 path = r'C:\Users\msald\OneDrive\Escritorio\UChicago\3. Classes\2425\1. Autum\2. PythonII\ps4\appended_df.csv'
-
 df = pd.read_csv(path)
-
-#df2017_inactive = df[df['YEAR'] == 2017 & df['PGM_TRMNTN_CD'] != 0]
-#df2018_inactive = df[df['YEAR'] == 2018]
 ```
 
-
-
 ```{python}
-
 # First, let's split our df by year
 df_2016 = df[df['YEAR'] == 2016]
 df_2017 = df[df['YEAR'] == 2017]
 df_2018 = df[df['YEAR'] == 2018]
 df_2019 = df[df['YEAR'] == 2019]
-
 # Now, let's identify what hospitals were active in 2016
 df_2016_active = df_2016[df_2016['PGM_TRMNTN_CD'] == 0]
 df_2016_inactive = df_2016[df_2016['PGM_TRMNTN_CD'] != 0]
-
-
 # Finally, let's compare across all the years
+
 # For 2017
 merged_2017 = pd.merge(df_2016_active, df_2017[['PRVDR_NUM',
                                                 'PGM_TRMNTN_CD']],
@@ -205,8 +187,7 @@ merged_2017_inactive = merged_2017[merged_2017['YEAR_CLOSURE'] == 2017].drop(
 )
 
 merged_2017_active = merged_2017[merged_2017['PGM_TRMNTN_CD_2017'] == 0]
-len(merged_2017_inactive)
-
+len(merged_2017_inactive) #40 hospitals closed in 2017
 ```
 
 ```{python}
@@ -215,7 +196,6 @@ merged_2018 = pd.merge(merged_2017_active, df_2018[['PRVDR_NUM',
                                                     'PGM_TRMNTN_CD']],
                        on='PRVDR_NUM',
                        how='left')
-
 
 merged_2018 = merged_2018.rename(
     columns={'PGM_TRMNTN_CD': 'PGM_TRMNTN_CD_2018'})
@@ -232,8 +212,7 @@ merged_2018_inactive = merged_2018[merged_2018['YEAR_CLOSURE'] == 2018].drop(
 )
 
 merged_2018_active = merged_2018[merged_2018['PGM_TRMNTN_CD_2018'] == 0]
-
-len(merged_2018_inactive)
+len(merged_2018_inactive) #58 hospitals closed in 2017
 ```
 
 ```{python}
@@ -242,7 +221,6 @@ merged_2019 = pd.merge(merged_2018_active, df_2019[['PRVDR_NUM',
                                                     'PGM_TRMNTN_CD']],
                        on='PRVDR_NUM',
                        how='left')
-
 
 merged_2019 = merged_2019.rename(
     columns={'PGM_TRMNTN_CD': 'PGM_TRMNTN_CD_2019'})
@@ -266,8 +244,8 @@ suspected_closures = pd.concat([merged_2017_inactive,
                                 merged_2019_inactive],
                                ignore_index=True)
 
-print(f"Number of suspected hospital closures by 2019: {
-      len(suspected_closures)}")
+print(f"Number of suspected hospital closures by 2019: {len(suspected_closures)}")  
+#Aggregating all the hospitals (2016-2019), we have 174 suspected closures
 
 ```
 
@@ -277,16 +255,21 @@ print(f"Number of suspected hospital closures by 2019: {
 # For this step, we sorted suspected closures by facility name and report first 10 rows
 suspected_closures_sorted = suspected_closures[['FAC_NAME', 'ST_ADR', 'ZIP_CD', 'YEAR_CLOSURE']].sort_values(by='FAC_NAME')
 print(suspected_closures_sorted.head(10))
-
 ```
 
 3. 
 
 ```{python}
+# To identify the potential hospitals that closed in a specific year and reopen in the year after the closure, 
+# we follow 2 steps:
+ 
+# Step 1: we identify all the active hospitals per zipcode 
 active_2017_by_zcd = merged_2017_active.groupby('ZIP_CD').size().reset_index(name='active_2017')
 active_2018_by_zcd = merged_2018_active.groupby('ZIP_CD').size().reset_index(name='active_2018')
 active_2019_by_zcd = merged_2019_active.groupby('ZIP_CD').size().reset_index(name='active_2019')
 
+# Step 2: we identify all the zipcodes with active hospitals in our list of inactive hospitals
+# For Year closure: 2017 and a reopen in 2018
 zcd_comparison_1 = pd.merge(active_2017_by_zcd, active_2018_by_zcd, on='ZIP_CD', how='left').fillna(0)
 zcd_comparison_1['comparison'] = zcd_comparison_1['active_2018'] - zcd_comparison_1['active_2017']
 zcd_comparison_1 = zcd_comparison_1[zcd_comparison_1['comparison'] >= 0]
@@ -301,6 +284,7 @@ merged_2017_inactive_clean = merged_2017_inactive_2[merged_2017_inactive_2['comp
     axis=1
 ) 
 
+#For Year closure: 2018 and a reopen in 2019
 zcd_comparison_2 = pd.merge(active_2018_by_zcd, active_2019_by_zcd, on='ZIP_CD', how='left').fillna(0)
 zcd_comparison_2['comparison'] = zcd_comparison_2['active_2019'] - zcd_comparison_2['active_2018']
 zcd_comparison_2 = zcd_comparison_2[zcd_comparison_2['comparison'] >= 0]
@@ -315,12 +299,13 @@ merged_2018_inactive_clean = merged_2018_inactive_2[merged_2018_inactive_2['comp
     axis=1
 ) 
 
+# We have identified per year the hospitals that potentially closed and re-open the year after.
 ```
 
-    a.
-How many hospitals fit the definition?
+    a. How many hospitals fit the definition? 25 hospitals fit the merger/acquisition definition
 
 ```{python}
+# We filter out the hospitals that match the definition in our inactive dfs per year
 merged_2017_inactive_drops = merged_2017_inactive_2[merged_2017_inactive_2['comparison'] == 0].drop(
     ['comparison'],
     axis=1
@@ -334,78 +319,311 @@ merged_2018_inactive_drops = merged_2018_inactive_2[merged_2018_inactive_2['comp
 merge_acq = pd.concat([merged_2017_inactive_drops,
                        merged_2018_inactive_drops],
                       ignore_index=True)
-print(f"Number of merge/acq: {
-      len(merge_acq)}")
+print(f"Number of merge/acq: {len(merge_acq)}")
 
 ```
 
-After correcting for this, how many inactive hospitals do I have left?
+    b. After correcting for this, how many inactive hospitals do I have left? 149 hospitals left
 ```{python}
+# We clean the suspected_closures dfs
 suspected_closures_clean = pd.concat([merged_2017_inactive_clean,
                                 merged_2018_inactive_clean,
                                 merged_2019_inactive],
                                ignore_index=True)
-
-
-
-print(f"Number of real hospital closure by 2019: {
-      len(suspected_closures_clean)}")
-
-
+print(f"Number of real hospital closure by 2019: {len(suspected_closures_clean)}")
 ```
 
-```{python}
-#Para amor, borrar luego
-path = r'C:\Users\msald\OneDrive\Escritorio\UChicago\3. Classes\2425\1. Autum\2. PythonII\ps4\suspected_closures_clean.csv'
-
-suspected_closures_clean.to_csv(path, index=False)
-
-```
-
-    b.
+    c.
 
 ```{python}
+# As before, we sorted our suspected closures clean dataframe by facility name and report first 10 rows
 suspected_closures_clean_sorted = suspected_closures_clean[['FAC_NAME', 'ST_ADR', 'ZIP_CD', 'YEAR_CLOSURE']].sort_values(by='FAC_NAME')
 print(suspected_closures_clean_sorted.head(10))
 ```
 
 ## Download Census zip code shapefile (10 pt) 
 
-```{python}
-import geopandas as gpd
+1. 
+    a. 
+    The first file type is a .dbf file, and it contains attribute data related to spatial features, where each row corresponds to a spatial entity (like a geographic boundary) and each column represents an attribute of that entity (like name, population, area, etc.).
 
+    The second file is a .prj file, and it contains a Geographic Coordinate System (GCS) definition in Well Known Text (WKT) format.
+
+    The third file is a .shp file, and it contains the  shapes or outlines of geographic objects, such as cities, roads, or rivers in our data.
+
+    The fourth file is a .shx file, and it contains information to serve as an index file for the .shp file.
+
+    The fifth file is a .xml file, and it contains metadata about a U.S. Census Bureau cartographic boundary shapefile from the 2010 Census, specifically for the 5-Digit ZIP Code Tabulation Area (ZCTA) in the United States
+
+    b. 
+    The .dbf file is 6.4 megabytes in size. 
+    The .prj file is 165 bytes.
+    The .shp file is the largest at 837.5 megabytes.
+    The .shx file is 265 kilobytes.
+    The .xml file is 16 kilobytes. 
+
+
+2. PLEASE NOTE: Beginning at point 3.2, I had to use my partner's computer because my own computer would not read in NumPy or Matplotlib, despite spending hours troubleshooting within virtual environments. I am commenting out the unnecessary/redundant code in Section 3, but keeping it within the file to show that I did it. After reading in the files on my own computer, I sent them to my partner and was able to load them in directly when I began work on his computer, so I am commenting out that process.
+```{python}
+# Import packages
+import geopandas as gpd
+import fiona
+import pyogrio
 ```
 
 ```{python}
-
+## Read .shp file
 path = r'C:\Users\msald\OneDrive\Escritorio\UChicago\3. Classes\2425\1. Autum\2. PythonII\ps4\gz_2010_us_860_00_500k\gz_2010_us_860_00_500k.shp'
-
 gdf = gpd.read_file(path)
 ```
 
-1. 
-    a.
-    b. 
-2. 
+```{python}
+## Turn zip code to a string so I can use startswith() function
+gdf['ZCTA5'] = gdf['ZCTA5'].astype(str)
+## Filter TX zipcodes (starts with 75, 76, 77, 78, 79, or 733 (Austin, TX))
+txdf = gdf[gdf['ZCTA5'].str.startswith(('75', '76', '77', '78', '79', '733'))]
+# Rename zipcode column in txdf for merge
+txdf = txdf.rename(columns={'ZCTA5': 'ZIP_CD'})
+# Convert zip code to numeric for merge
+txdf.loc[:, 'ZIP_CD_num'] = pd.to_numeric(txdf['ZIP_CD'])
+
+# Group active hospitals in 2016 by zip code
+active_byzip = df_2016_active.groupby('ZIP_CD').size().reset_index(name='TOTAL_ACTIVE')
+# Convert zip code to numeric for merge
+active_byzip.loc[:, 'ZIP_CD_num'] = pd.to_numeric(active_byzip['ZIP_CD'])
+# Merge df_2016_active on txdf on the 'ZIP_CD' column
+texas_active_byzip = pd.merge(txdf, active_byzip, on='ZIP_CD_num', how='left')
+
+import matplotlib.pyplot as plt
+# Fill NAs with 0
+texas_active_byzip['TOTAL_ACTIVE'] = texas_active_byzip['TOTAL_ACTIVE'].fillna(0)
+# Plot
+texas_active_byzip.plot(column = "TOTAL_ACTIVE", legend=True).set_axis_off()
+```
 
 ## Calculate zip code’s distance to the nearest hospital (20 pts) (*)
 
 1. 
+
+```{python}
+# First, we calculate the centroids
+zips_all_centroids = gdf.copy()
+zips_all_centroids["geometry"].centroid
+
+# Now, we calculate the dimensions of our new GDF
+print("Dimensions:", zips_all_centroids.shape)
+```
+
 2. 
-3. 
+```{python}
+# First df: Texas Only
+zips_texas_centroids = zips_all_centroids[zips_all_centroids['ZCTA5'].str.startswith(
+    ('75', '76', '77', '78', '79'))]
+
+# Second df: Texas and Bordering states
+zips_texas_borderstates_centroids = zips_all_centroids[zips_all_centroids['ZCTA5'].str.startswith(('870', '871', '872', '873', '874', '875', '876', '877', '878', '879', '880',
+                                                                                                   '881', '882', '883', '884', '73', '74', '75', '76', '77', '78', '79', '716', '717', '718', '719', '720', '721', '722', '723', '724', '725', '726', '727', '728', '729', '700', '701', '702', '703', '704', '705', '706', '707', '708', '709', '710', '711', '712', '713', '714', '715'))]
+
+# Count the Unique
+# Texas only
+print(f"Number of unique ZIP codes in Texas: {
+      zips_texas_centroids['ZCTA5'].nunique()}")
+
+# Texas and Bordering states
+print(f"Number of unique ZIP codes in Texas and bordering states: {
+      zips_texas_borderstates_centroids['ZCTA5'].nunique()}")
+```
+
+3. What kind of merge and what variable did I use for the merge? I carried out an inner merge using "ZCTA5" (zipcode) as merge key. This is because I wanted to keep only the zipcodes that are common across my dataframe with texas and boarder states zipcodes and my 2016 active hospitals list. Worth noting that, in order to successfully apply the merge, both zicodes needed to be "numeric" variables.
+
+```{python}
+zips_texas_borderstates_centroids.loc[:, 'ZCTA5_num'] = pd.to_numeric(zips_texas_borderstates_centroids['ZCTA5'])
+
+zips_withhospital_centroids = pd.merge(zips_texas_borderstates_centroids,
+                                       df_2016_active,
+                                       how = 'inner',
+                                       left_on = 'ZCTA5_num',
+                                       right_on = 'ZIP_CD')
+
+```
+
 4. 
+
+```{python}
+import time
+from shapely import Point
+```
     a.
+
+```{python}
+# Sample with the first 10 zipcodes
+zips_texas_sample = zips_texas_centroids.head(10)
+
+# Calculate nearest distances
+# Estimate time for the sample
+start_time = time.time()
+
+distances = []
+for _, texas_zip in zips_texas_sample.iterrows():
+    min_distance = zips_withhospital_centroids.distance(
+        texas_zip.geometry).min()
+    distances.append(min_distance)
+
+end_time = time.time()
+
+elapsed_time = end_time - start_time
+print(f"10 zip codes: {elapsed_time:.2f} seconds")
+
+# Estimate time for the entire join
+total_zips = len(zips_texas_centroids)
+estimated_time = (elapsed_time / 10) * total_zips
+print(f"Estimated time for entire procedure: {estimated_time / 60:.2f} minutes")
+```
+
     b.
-5. 
-    a.
-    b.
+
+```{python}
+# We replicate the previous code for the full df.
+#start_time = time.time()
+
+#distances = []
+#for _, texas_zip in zips_texas_centroids.iterrows():
+#    min_distance = zips_withhospital_centroids.distance(
+#        texas_zip.geometry).min()
+#    distances.append(min_distance)
+
+#end_time = time.time()
+
+#elapsed_time = end_time - start_time
+#print(f"Whole time: {elapsed_time:.2f} seconds")
+
+#zips_texas_centroids['distance_nearest_hospital'] = distances
+```
+
+Yes, it was very close to my calculations (196 minutes).
+
     c.
-    
+
+```{python}
+import fiona
+path = r'C:\Users\msald\OneDrive\Escritorio\UChicago\3. Classes\2425\1. Autum\2. PythonII\ps4\gz_2010_us_860_00_500k\gz_2010_us_860_00_500k.prj'
+
+with open(path) as file:
+    prj = file.read()
+
+print(prj)
+```
+
+The unit is in degrees. Given, that 1 degree of latitude or longitude is approximately 69 miles, we would need to multiply the distance times 69.
+
+5. Because this variable is dependent on section 4.4.b, I'm commenting it out because it will take too long to run the code and come up with an output. This includes the creation of the map.
+
+```{python}
+#Calculating the average distance to the nearest hospital (in degrees)
+#zips_texas_centroids['distance_nearest_hospital_miles'] = zips_texas_centroids['distance_nearest_hospital']
+```
+
+    a. The unit is in degrees
+
+    b.
+
+```{python}
+#zips_texas_centroids['distance_nearest_hospital_miles'] = zips_texas_centroids['distance_nearest_hospital']*69
+
+#average_distance = zips_texas_centroids['distance_nearest_hospital_miles'].mean()
+
+#print(average_distance)
+```
+
+    c.
+
+```{python}
+#zips_texas_borderstates_centroids.loc[:, 'ZCTA5_num'] = pd.to_numeric(zips_texas_borderstates_centroids['ZCTA5'])
+```
+
 ## Effects of closures on access in Texas (15 pts)
 
 1. 
-2. 
-3. 
+```{python}
+# Calculate number of hospital closures by zipcode
+# Note: all zip codes in  represented only have 1 closure associated with them
+closures_byzip = suspected_closures_clean.groupby('ZIP_CD').size().reset_index(name='TOTAL_CLOSURES')
+# Turn suspected_closures_clean zip code variable to string
+closures_byzip['ZIP_CD'] = closures_byzip['ZIP_CD'].astype(str)
+# Use startwith() function to filter Texas zip codes
+closures_byzip_tx = closures_byzip[closures_byzip['ZIP_CD'].str.startswith(('75', '76', '77', '78', '79', '733'))]
+# Display
+# Print DataFrame as a table
+print(closures_byzip_tx.to_string())
+```
+
+2. There are 28 directly affected zipcodes.
+```{python}
+# Turn zipcode variable to numeric for merge
+closures_byzip_tx.loc[:, 'ZIP_CD_num'] = pd.to_numeric(closures_byzip_tx['ZIP_CD'])
+# Rename zipcode column in txdf for merge
+txdf = txdf.rename(columns={'ZCTA5': 'ZIP_CD'})
+# Turn zipcode variable to numeric for merge
+txdf.loc[:, 'ZIP_CD_num'] = pd.to_numeric(txdf['ZIP_CD'])
+# Merge closures_byzip on txdf on the 'ZIP_CD' column
+texas_closures_byzip = pd.merge(txdf, closures_byzip_tx, on='ZIP_CD_num', how='left')
+# Determine how many direct closures there are
+tx_direct_closures = texas_closures_byzip[texas_closures_byzip["TOTAL_CLOSURES"]>=1]
+print(len(tx_direct_closures))
+
+# Plot
+import matplotlib.pyplot as plt
+# Fill NAs with 0
+texas_closures_byzip['TOTAL_CLOSURES'] = texas_closures_byzip['TOTAL_CLOSURES'].fillna(0)
+# Plot
+texas_closures_byzip.plot(column = "TOTAL_CLOSURES", legend=True).set_axis_off()
+```
+
+3. There are 477 zip codes that are indirectly affected.
+
+```{python}
+# Filter
+tx_direct_closures = texas_closures_byzip[texas_closures_byzip["TOTAL_CLOSURES"]>=1]
+# Reproject to a suitable CRS for distance calculations (EPSG 3857 for meters)
+# Code from ChatGPT
+tx_direct_closures = tx_direct_closures.to_crs(epsg=3857)
+# Convert miles to meters because EPSA uses meters
+miles_to_meters = 1609.34  # 1 mile = 1609.34 meters
+buffer_distance = 10 * miles_to_meters
+# Create buffer zones
+direct_buffer = tx_direct_closures.copy()
+direct_buffer['geometry'] = direct_buffer.geometry.buffer(buffer_distance)
+# Change CRS for txdf 
+txdf = txdf.to_crs(epsg=3857)
+# Spatial join
+all_indirect = gpd.sjoin(txdf, direct_buffer, how="inner", predicate="intersects")
+indirect = all_indirect[~all_indirect['ZIP_CD'].isin(tx_direct_closures['ZIP_CD_x'])]
+# Plot together
+fig, ax = plt.subplots()
+txdf.plot(ax=ax,color="red", alpha=0.5).set_axis_off()
+indirect.plot(ax=ax,color="blue", alpha=0.3).set_axis_off()
+plt.show()
+
+# How many indirectly affected zipcodes are there?
+unique_indirect = indirect["ZIP_CD"].unique()
+print(len(unique_indirect))
+```
+
 4. 
+```{python}
+# Create new variable in txdf to denote closure status
+txdf["CLOSURE_STATUS"] = "Not Affected"
+# Set 'Directly Affected' for directly affected zip codes
+txdf.loc[txdf['ZIP_CD'].isin(tx_direct_closures['ZIP_CD_x']), "CLOSURE_STATUS"] = "Directly Affected"
+# Set 'Indirectly Affected' for indirectly affected zip codes
+txdf.loc[txdf['ZIP_CD'].isin(indirect['ZIP_CD']), "CLOSURE_STATUS"] = "Indirectly Affected"
+
+txdf.plot(column="CLOSURE_STATUS", legend=True).set_axis_off()
+```
+
 
 ## Reflecting on the exercise (10 pts) 
+
+1. Given that we remove suspected closures based on the idea that the number of active hospitals in that zip code did not decrease the year after suspected closure, without verifying each individual entry, we could be introducing inaccuracy. It is possible that the hospital we removed from the suspected closure list truly did close and was not part of a merger or did not reopen another way, and simply another completely distinct hospital opened the next year. To be more accurate, we could look at the hospitals that were coded as closed the year prior and write a function to look for new hospitals that have similar keywords in their names that emerge in the data the year after suspected closure; this could mean that the hospital only reopened under a different name. Additionally, we could use distance to focus on a specific subset of new openings. We could set a reasonable distance threshold from closed hospitals (e.g., 1 mile or less) to identify potential re-openings. This would help narrow down potential cases where a hospital reopens under a different name in the same location or close by, which would suggest it’s likely the same facility rather than a completely new hospital.
+
+2. In this exercise, we identified the zip codes where hospitals have closed. Subsequently, within a 10-mile radius, we identified other affected zip codes and the potential hospitals within them. However, this is not the most accurate measure, as it may lead to an overrepresentation of the potentially affected zip codes. Two better alternatives could be: (i) working at the centroid level, ensuring more uniform distances, or (ii) focusing on the specific location of each hospital and defining the radius of impact around each one. In both cases, the number of indirectly affected zip codes and hospitals would be more accurately represented.
